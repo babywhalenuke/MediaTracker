@@ -1,14 +1,10 @@
 package co.miniforge.corey.mediatracker.media_recycler;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import co.miniforge.corey.mediatracker.MediaItemDetailActivity;
 import co.miniforge.corey.mediatracker.MyListActivity;
 import co.miniforge.corey.mediatracker.R;
 import co.miniforge.corey.mediatracker.model.MediaItem;
@@ -20,6 +16,10 @@ import co.miniforge.corey.mediatracker.model.MediaItem;
 public class MediaViewHolder extends RecyclerView.ViewHolder {
     TextView mediaName;
     TextView mediaDescription;
+//    TextView url;
+//    TextView upvotes;
+//    TextView downvotes;
+//    TextView views;
 
     View inflated;
 
@@ -34,7 +34,6 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
     private void locateViews(View itemView) {
         inflated = itemView;
         context = itemView.getContext();
-
         mediaName = itemView.findViewById(R.id.mediaName);
         mediaDescription = itemView.findViewById(R.id.mediaDescription);
     }
@@ -59,4 +58,5 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
 }

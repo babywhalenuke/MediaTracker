@@ -1,12 +1,7 @@
 package co.miniforge.corey.mediatracker;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import org.json.JSONObject;
-
-import co.miniforge.corey.mediatracker.model.MediaItem;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * This activity will display the contents of a media item and allow the user to update the contents

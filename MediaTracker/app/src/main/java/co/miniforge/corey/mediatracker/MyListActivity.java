@@ -1,27 +1,23 @@
 package co.miniforge.corey.mediatracker;
 
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,11 +92,15 @@ public class MyListActivity extends AppCompatActivity {
         add_media_item_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PopupMenu menu = new PopupMenu(view.getContext(),view);
+                menu.inflate(R.menu.add_menu);
+                menu.setOnMenuItemClickListener(new AddPopUpMenuHelper((MyListActivity)view.getContext()));
+                menu.show();
                 //Create new empty media item
-                MediaItem item = new MediaItem();
-                mediaItems.add(item);
-                storageUtil.saveMediaData(mediaItems);
-                updateMediaItems(mediaItems);
+//                MediaItem item = new MediaItem();
+//                mediaItems.add(item);
+//                storageUtil.saveMediaData(mediaItems);
+//                updateMediaItems(mediaItems);
             }
         });
 
@@ -130,11 +130,54 @@ public class MyListActivity extends AppCompatActivity {
         ((MediaRecyclerAdapter)media_list_recycler.getAdapter()).updateList(this.mediaItems);
     }
 
+    public void addMediaItem(MediaItem mediaItem){
+        String mediaItemType = mediaItem.mediaItemType.toString();
+        mediaItem.id = Integer.toString(mediaItems.size()+1);
+        mediaItem.title = "Default " + mediaItemType + " Title";
+        mediaItem.description = "Default " + mediaItemType + " Description";
+        mediaItems.add(mediaItem);
+        storageUtil.saveMediaData(mediaItems);
+        updateMediaItems(mediaItems);
+    }
+
     void setUpRecyclerView(){
         MediaRecyclerAdapter adapter = new MediaRecyclerAdapter();
         media_list_recycler.setAdapter(adapter);
 
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
         media_list_recycler.setLayoutManager(manager);
+    }
+
+    public void sortMedia(String sortBy){
+        MediaItemSortHelper sorter = new MediaItemSortHelper();
+        switch(sortBy) {
+            case "type": mediaItems = sorter.sortByType(mediaItems);
+            case "name" : mediaItems = sorter.sortByName(mediaItems);
+            default : break;
+        }
+        storageUtil.saveMediaData(mediaItems);
+        updateMediaItems(mediaItems);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_my_list,menu);
+        return true;
+        //return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.sortByName :
+                sortMedia("name");
+                break;
+            case R.id.sortByType :
+                sortMedia("type");
+                break;
+        }
+        return true;
+        //return super.onOptionsItemSelected(item);
     }
 }
